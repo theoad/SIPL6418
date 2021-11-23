@@ -11,7 +11,6 @@ from torch_fidelity.feature_extractor_inceptionv3 import FeatureExtractorIncepti
 
 
 class NoTrainInceptionV3(FeatureExtractorInceptionV3):
-
     def __init__(
         self,
         name: str,
