@@ -25,10 +25,12 @@ class PositiveDefiniteRectifier(torch.nn.Module):
             Number of logarithmic step in the search
     """
     def __init__(self,
+                 minimal_increment: Optional[bool] = False,
                  low: Optional[float] = 1e-6,
                  high: Optional[float] = 10,
                  step: Optional[int] = 100):
         super().__init__()
+        self.minimal_increment = minimal_increment
         self.low = low
         self.high = high
         self.step = step
@@ -40,6 +42,8 @@ class PositiveDefiniteRectifier(torch.nn.Module):
 
         Returns: PSD matrix
         """
+        if not self.minimal_increment:
+            return mat + torch.eye(*mat.size(), out=torch.empty_like(mat)) * self.low
         for i in range(mat.shape[0]):
             if not constraints.positive_definite.check(mat):
                 # Numerical trick to deal with SPD matrices
